@@ -81,7 +81,7 @@ end
 
     /*---------------------------------------------------------------------------
 	    Set Run Speed	
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("setrunspeed")
         :SetPermission("setrunspeed", "superadmin")
 
@@ -113,7 +113,7 @@ end
 
     /*---------------------------------------------------------------------------
 	    Set Walk Speed	
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("setwalkspeed")
         :SetPermission("setwalkspeed", "superadmin")
 
@@ -144,7 +144,7 @@ end
 
     /*---------------------------------------------------------------------------
 	    Set Jump Power
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("setjumppower")
         :SetPermission("setjumppower", "superadmin")
 
@@ -187,13 +187,13 @@ end
         end)
     end
 
-    command.new("givebhop")
+    command.new("bhop")
         :SetPermission("givebhop", "superadmin")
 
         :AddArg("player")
-        :AddArg("number", {hint = "amount", optional = true, min = 0, max = 1, default = 0, round = true})
+        :AddArg("number", {hint = "amount", optional = true, min = 0, max = 1, default = 1, round = true})
 
-        :Help("Gives the Players Bhops")
+        :Help("Gives the Players Bhop")
 
         :OnExecute(function(ply, targets, amount)
             for i = 1, #targets do
@@ -203,11 +203,11 @@ end
             if sam.is_command_silent then return end
             
             if amount == 1 then
-                ply:sam_send_message("{A} gave {T} Bhops", {
+                ply:sam_send_message("{A} gave {T} bhop.", {
                     A = ply, T = targets, V = amount
                 })
             else
-                ply:sam_send_message("{A} disabled {T}'s Bhops", {
+                ply:sam_send_message("{A} disabled {T}'s bhop.", {
                     A = ply, T = targets, V = amount
                 })
             end
@@ -337,35 +337,35 @@ end
 	    Disable Damage for Players		
     ---------------------------------------------------------------------------*/
 
-        command.new("dban")
-        :SetPermission("dban", "superadmin")
+        command.new("damageban")
+        :SetPermission("damageban", "superadmin")
 
         :AddArg("player", {allow_higher_target = false, single_target = true})
         :AddArg("text", {hint = "reason", optional = true, default = sam.language.get("default_reason")})
-        :AddArg("number", {hint = "minutes", optional = true, default = 600, round = true})
+        :AddArg("number", {hint = "minutes", optional = true, default = 0, round = true})
 
         :Help("Disables the ability for the Player to Deal Damage")
 
         :OnExecute(function(ply, targets, reason, length)
             for i = 1, #targets do
-                targets[i]:sam_set_nwvar("dban", true)
-                timer.Create("SAM.DBan." .. targets[i]:SteamID(), length*60, 1, function()
+                targets[i]:sam_set_nwvar("damageban", true)
+                timer.Create("SAM.damageban." .. targets[i]:SteamID(), length*60, 1, function()
                     if IsValid(targets[i]) then
-                        targets[i]:sam_set_nwvar("dban", false)
+                        targets[i]:sam_set_nwvar("damageban", false)
                     end
                 end)
             end
 
             if sam.is_command_silent then return end
             
-            ply:sam_send_message("{A} Disabled Damage for {T} for reason: {V}", {
+            ply:sam_send_message("{A} damage banned {T} for: {V}", {
                 A = ply, T = targets, V = reason
             })
         end)
     :End()
 
-    command.new("undban")
-        :SetPermission("undban", "superadmin")
+    command.new("undamageban")
+        :SetPermission("undamageban", "superadmin")
 
         :AddArg("player", {allow_higher_target = false, single_target = true})
 
@@ -373,13 +373,13 @@ end
 
         :OnExecute(function(ply, targets)
             for i = 1, #targets do
-                targets[i]:sam_set_nwvar("dban", false)
-                timer.Remove("SAM.DBan." .. ply:SteamID())
+                targets[i]:sam_set_nwvar("damageban", false)
+                timer.Remove("SAM.damageban." .. ply:SteamID())
             end
 
             if sam.is_command_silent then return end
             
-            ply:sam_send_message("{A} Re-Enabled Damage for {T}", {
+            ply:sam_send_message("{A} undamage banned {T}", {
                 A = ply, T = targets
             })
         end)
@@ -387,7 +387,7 @@ end
 
     /*---------------------------------------------------------------------------
 	    Bring & Freeze	
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("fbring")
         :DisallowConsole()
         :SetPermission("fbring", "admin")
@@ -456,7 +456,7 @@ end
 
     /*---------------------------------------------------------------------------
 	    Get Ent Owner		
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("id")
 		:SetPermission("id", "admin")
 
@@ -507,8 +507,8 @@ end
         Mute & Gag
     ---------------------------------------------------------------------------*/
     do
-        command.new("mg")
-            :SetPermission("mg", "admin")
+        command.new("mutegag")
+            :SetPermission("mutegag", "admin")
     
             :AddArg("player")
             :AddArg("length", {optional = true, default = 0, min = 0})
@@ -532,7 +532,7 @@ end
                         end)
                     end
                 end
-                ply:sam_send_message("{A} Muted and Gagged {T} for {V} Reason: {V_2}", {
+                ply:sam_send_message("{A} Muted and Gagged {T} for {V}. ({V_2})", {
                     A = ply, T = targets, V = sam.format_length(length), V_2 = reason
                 })
             end)
@@ -542,7 +542,7 @@ end
 
     /*---------------------------------------------------------------------------
 	    Warn & Ban		
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("wban") 
 	:SetPermission("wban", "admin")
 
@@ -686,7 +686,7 @@ do
 	end
     /*---------------------------------------------------------------------------
 	    Warn & Jail		
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
 	command.new("wjail")
 		:SetPermission("wjail", "admin")
 
@@ -723,7 +723,7 @@ end
 
     /*---------------------------------------------------------------------------
 	    Job Ban		
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("jobban")
         :SetPermission("jobban", "admin")
 
@@ -757,7 +757,7 @@ end
 
     /*---------------------------------------------------------------------------
 	    Job UnBan		
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("jobunban")
         :SetPermission("jobunban", "admin")
 
@@ -789,7 +789,7 @@ end
 
     /*---------------------------------------------------------------------------
 	    cpban	
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("cpban")
         :SetPermission("cpban", "admin")
 
@@ -814,7 +814,7 @@ end
     :End()
     /*---------------------------------------------------------------------------
 	    Disable Physgun
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("disablephysgun")
         :SetPermission("disablephysgun", "admin")
         :Help("Disables Being able to Physgun Players Off Duty")
@@ -829,7 +829,7 @@ end
     
     /*---------------------------------------------------------------------------
 	    Enable Physgun
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("enablephysgun")
         :SetPermission("enablephysgun", "admin")
         :Help("Enables Being able to Physgun Players Off Duty")
@@ -845,7 +845,7 @@ end
 
     /*---------------------------------------------------------------------------
 	    Set Door Owner
-    ---------------------------------------------------------------------------*/
+    ---------------------------------------------------------------------------
     command.new("doorowner")
 		:SetPermission("doorowner", "superadmin")
         :AddArg("player")
